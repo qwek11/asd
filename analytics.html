@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finance Insight - Аналитика рынков</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+          <img src="https://static.vecteezy.com/system/resources/previews/001/203/829/non_2x/eagle-logo-png.png" alt="Логотип" width="40" height="40"> 
+          Finance Insight
+        </div>
+        <nav>
+          <a href="#">Главная</a>
+          <a href="news.html">Новости экономики</a>
+          <a href="analytics.html">Аналитика рынков</a>
+          <a href="education.html">Обучение финансам</a>
+          <a href="contacts.html">Контакты</a>
+        </nav>
+        <a href="https://www.donationalerts.com/r/qwek11"><button>Подписаться</button></a> </a>
+      </header>
+    
+
+  <main>
+    <section class="currency-rates">
+      <h2>Курсы валют ЦБ РФ</h2>
+      <p>Данные обновляются автоматически с официального сайта Центрального Банка России.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Валюта</th>
+            <th>Код</th>
+            <th>Курс</th>
+            <th>Изменение</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Данные будут загружены динамически -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+  
+  <footer>
+    <p>Контакты: info@financeinsight.com | +7 (812) 765-43-21</p>
+    <div class="social-icons">
+      <img src="https://keaz.ru/img/tg.png" alt="Telegram" height="25">
+      <img src="https://youright.pro/img/youtube.png" alt="YouTube" height="25">
+      <img src="https://static.tildacdn.com/tild3333-3439-4463-a133-616266376432/VK_1__1.png" alt="VK" height="25">
+    </div>
+    <form action="#">
+      <input type="email" placeholder="Введите email">
+      <button>Отправить</button>
+    </form>
+  </footer>
+  <!-- Скрипт для динамического обновления курсов валют -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Загрузка данных с API ЦБ РФ
+      fetch("https://www.cbr-xml-daily.ru/daily_json.js")
+        .then((response) => response.json())
+        .then((data) => {
+          const rates = data.Valute;
+          const tableBody = document.querySelector(".currency-rates tbody");
+
+          // Очищаем таблицу
+          tableBody.innerHTML = "";
+
+          // Добавляем строки для каждой валюты
+          for (const code in rates) {
+            const currency = rates[code];
+            const row = `
+              <tr>
+                <td>${currency.Name}</td>
+                <td>${currency.CharCode}</td>
+                <td>${currency.Value.toFixed(2)} ₽</td>
+                <td>${currency.Value - currency.Previous > 0 ? "+" : ""}${(
+                  currency.Value - currency.Previous
+                ).toFixed(2)}</td>
+              </tr>
+            `;
+            tableBody.insertAdjacentHTML("beforeend", row);
+          }
+        })
+        .catch((error) => console.error("Ошибка загрузки данных:", error));
+    });
+  </script>
+</body>
+</html>
